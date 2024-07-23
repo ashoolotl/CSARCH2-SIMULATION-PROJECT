@@ -23,6 +23,7 @@ function simulateCache() {
     let memorySize = document.getElementById("memorySize").value.split('/').map(Number);
     let cacheSize = document.getElementById("cacheSize").value.split('/').map(Number);
     const programFlow = document.getElementById("programFlow").value.split(',').map(Number);
+    document.getElementById("exportButton").style.display = "block";
 
     //Word to Block input conversion
     const memoryUnit = document.querySelector('input[name="memoryUnit"]:checked').value;
@@ -107,4 +108,21 @@ function simulateCache() {
         ${table}
     `;
     document.getElementById("result").innerHTML = result;
+}
+
+function exportResult() {
+    const table = document.querySelector("table");
+    let tableData = "";
+    for (let row of table.rows) {
+        for (let cell of row.cells) {
+            tableData += cell.innerText + "\t";
+        }
+        tableData += "\n";
+    }
+
+    const blob = new Blob([tableData], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "Cache-Memory-Snapshot.txt";
+    link.click();
 }
