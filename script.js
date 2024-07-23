@@ -4,26 +4,37 @@
 // Input: 
 // 1. Block size
 // 2. Set size
-// 3. MM memory size (accept both blocks and words)
-// 4. Cache memory size (accept both blocks and words)
-// 5. program flow to be simulated (accept both
-// blocks and words) 
-// 6. and other parameters deemed needed.
+// 3. MM memory size (blocks/words)
+// 4. Cache memory size (blocks/words)
+// 5. Program flow to be simulated (blocks/words)
+// 6. ...and other parameters deemed needed.
 // Output: 
-// 1. number of cache hits
-// 2. number of cache miss
-// 3. miss penalty
-// 4. average memory access time
-// 5. total memory access time
-// 6. snapshot of the cache memory
+// 1. Number of cache hits
+// 2. Number of cache miss
+// 3. Miss penalty
+// 4. Average memory access time
+// 5. Total memory access time
+// 6. Snapshot of the cache memory
 // 7. With option to output result in text file.
 
 function simulateCache() {
     const blockSize = parseInt(document.getElementById("blockSize").value);
     const setSize = parseInt(document.getElementById("setSize").value);
-    const memorySize = document.getElementById("memorySize").value.split('/').map(Number);
-    const cacheSize = document.getElementById("cacheSize").value.split('/').map(Number);
+    let memorySize = document.getElementById("memorySize").value.split('/').map(Number);
+    let cacheSize = document.getElementById("cacheSize").value.split('/').map(Number);
     const programFlow = document.getElementById("programFlow").value.split(',').map(Number);
+
+    //Word to Block input conversion
+    const memoryUnit = document.querySelector('input[name="memoryUnit"]:checked').value;
+    const cacheUnit = document.querySelector('input[name="cacheUnit"]:checked').value;
+    //ex. Block Size = 2, Cache Size = 8 words -> 4 Blocks
+    if (memoryUnit === "words") {
+        memorySize = memorySize.map(size => size / blockSize);
+    }
+
+    if (cacheUnit === "words") {
+        cacheSize = cacheSize.map(size => size / blockSize);
+    }
 
     const cacheAccessTime = 1;
     const memoryAccessTime = 10; 

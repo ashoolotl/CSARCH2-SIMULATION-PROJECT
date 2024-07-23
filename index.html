@@ -12,11 +12,26 @@
             <input type="number" id="blockSize" required><br>
             <label for="setSize">Set Size (blocks):</label>
             <input type="number" id="setSize" required><br>
-            <label for="memorySize">Main Memory Size (blocks/words):</label>
-            <input type="text" id="memorySize" required><br>
-            <label for="cacheSize">Cache Size (blocks/words):</label>
-            <input type="text" id="cacheSize" required><br>
-            <label for="programFlow">Program Flow (blocks/words):</label>
+            
+            <label for="memorySize">Main Memory Size:</label>
+            <input type="number" id="memorySize" required>
+            <div>
+                <input type="radio" id="memoryBlocks" name="memoryUnit" value="blocks" checked>
+                <label for="memoryBlocks">Blocks</label>
+                <input type="radio" id="memoryWords" name="memoryUnit" value="words">
+                <label for="memoryWords">Words</label>
+            </div><br>
+            
+            <label for="cacheSize">Cache Size:</label>
+            <input type="number" id="cacheSize" required>
+            <div>
+                <input type="radio" id="cacheBlocks" name="cacheUnit" value="blocks" checked>
+                <label for="cacheBlocks">Blocks</label>
+                <input type="radio" id="cacheWords" name="cacheUnit" value="words">
+                <label for="cacheWords">Words</label>
+            </div><br>
+            
+            <label for="programFlow">Program Flow (blocks):</label>
             <input type="text" id="programFlow" required><br>
             <button type="button" onclick="simulateCache()">Simulate</button>
         </form>
