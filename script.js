@@ -25,14 +25,16 @@ function simulateCache() {
     const programFlow = document.getElementById("programFlow").value.split(',').map(Number);
     document.getElementById("exportButton").style.display = "block";
 
-    //Word to Block input conversion
+    
     const memoryUnit = document.querySelector('input[name="memoryUnit"]:checked').value;
     const cacheUnit = document.querySelector('input[name="cacheUnit"]:checked').value;
-    //ex. Block Size = 2, Cache Size = 8 words -> 4 Blocks
-    if (memoryUnit === "words") {
-        memorySize = memorySize.map(size => size / blockSize);
+    
+    //Block to Word input conversion
+    if (memoryUnit === "blocks") {
+        memorySize = memorySize.map(size => size * blockSize);
     }
 
+    //Word to Block input conversion
     if (cacheUnit === "words") {
         cacheSize = cacheSize.map(size => size / blockSize);
     }
@@ -74,8 +76,8 @@ function simulateCache() {
         }
     });
 
-    const missRate = misses / programFlow.length;
-    const hitRate = hits / programFlow.length;
+    const missRate = misses / memorySize;
+    const hitRate = hits / memorySize;
     const missPenalty = cacheAccessTime + (blockSize * memoryAccessTime) + cacheAccessTime;
     const averageAccessTime = (hitRate * cacheAccessTime) + (missRate * missPenalty);
     const totalAccessTime = (hits * blockSize * cacheAccessTime) + (misses * blockSize * (memoryAccessTime + cacheAccessTime)) + (misses * cacheAccessTime);
@@ -97,8 +99,8 @@ function simulateCache() {
     table += '</table>';
 
     const result = `
-        <p>Number of Cache Hits: ${hits}/${programFlow.length}</p>
-        <p>Number of Cache Misses: ${misses}/${programFlow.length}</p>
+        <p>Number of Cache Hits: ${hits}/${memorySize}</p>
+        <p>Number of Cache Misses: ${misses}/${memorySize}</p>
         <p>Miss Penalty: ${missPenalty} ns</p>
         <p>Average Memory Access Time: ${averageAccessTime.toFixed(2)} ns</p>
         <p>Total Memory Access Time: ${totalAccessTime} ns</p>
