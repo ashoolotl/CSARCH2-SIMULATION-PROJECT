@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cache Simulator</title>
+</head>
+<body>
+    <h1>Cache Simulator - Block Sequence</h1>
+    <label for="blockSize">Block Size:</label>
+    <input type="number" id="blockSize" value="4"><br><br>
+    <label for="setSize">Set Size:</label>
+    <input type="number" id="setSize" value="2"><br><br>
+    <label for="cacheSize">Cache Size (blocks):</label>
+    <input type="number" id="cacheSize" value="4"><br><br>
+    <label for="programFlow">Program Flow (blocks, comma separated):</label>
+    <input type="text" id="programFlow" value="1,2,3,4,5,4,6,3"><br><br>
+    <button onclick="simulateCache()">Simulate Cache</button>
+    <div id="result"></div>
+    <button id="exportButton" style="display:none" onclick="exportResult()">Export Result</button>
+
+    <script>
+        function simulateCache() {
+            const blockSize = parseInt(document.getElementById("blockSize").value);
+            const setSize = parseInt(document.getElementById("setSize").value);
+            const cacheSize = parseInt(document.getElementById("cacheSize").value);
+            const programFlow = document.getElementById("programFlow").value.split(',').map(Number);
+
+            document.getElementById("exportButton").style.display = "block";
+
+            const numSets = Math.ceil(cacheSize / setSize);
+            let cache = new Array(numSets).fill(null).map(() => new Array(setSize).fill(null).map(() => ({ block: -1, lastUsed: -1 })));
+
+            let hits = 0, misses = 0, time = 0, age = 0;
+            let log = [];
+
+            programFlow.forEach((block, index) => {
+                const setIndex = block % numSets;
+                let set = cache[setIndex];
+                let hit = false;
+                let logEntry = { age: age++, sequence: block, set: setIndex, block: -1, status: "Miss" };
+
+                for (let i = 0; i < setSize; i++) {
+                    if (set[i].block === block) {
+                        hits++;
+                        hit = true;
+                        set[i].lastUsed = index;
+                        logEntry.block = i;
+                        logEntry.status = "Hit";
+                        break;
+                    }
+                }
+
+                if (!hit) {
+                    misses++;
+                    let lruIndex = 0;
+                    for (let i = 1; i < setSize; i++) {
+                        if (set[i].lastUsed < set[lruIndex].lastUsed) {
+                            lruIndex = i;
+                        }
+                    }
+                    set[lruIndex] = { block: block, lastUsed: index };
+                    logEntry.block = lruIndex;
+                    time += 1 + 10; // cacheAccessTime + memoryAccessTime
+                } else {
+                    time += 1; // cacheAccessTime
+                }
+
+                log.push(logEntry);
+            });
+
+            const missRate = misses / programFlow.length;
+            const hitRate = hits / programFlow.length;
+            const missPenalty = 1 + (blockSize * 10) + 1; // cacheAccessTime + (blockSize * memoryAccessTime) + cacheAccessTime
+            const averageAccessTime = (hitRate * 1) + (missRate * missPenalty); // (hitRate * cacheAccessTime) + (missRate * missPenalty)
+            const totalAccessTime = (hits * blockSize * 1) + (misses * blockSize * (10 + 1)) + (misses * 1); // (hits * blockSize * cacheAccessTime) + (misses * blockSize * (memoryAccessTime + cacheAccessTime)) + (misses * cacheAccessTime)
+
+            let table = '<table border="1"><tr><th>Set</th>';
+            for (let i = 0; i < setSize; i++) {
+                table += `<th>Block ${i}</th>`;
+            }
+            table += '</tr>';
+
+            cache.forEach((set, setIndex) => {
+                table += `<tr><td>Set ${setIndex}</td>`;
+                set.forEach(block => {
+                    table += `<td>${block.block !== -1 ? block.block : '-'}</td>`;
+                });
+                table += '</tr>';
+            });
+            table += '</table>';
+
+            let logTable = '<table border="1"><tr><th>Age</th><th>Sequence Number</th><th>Set</th><th>Block</th><th>Hit or Miss</th></tr>';
+            log.forEach(entry => {
+                logTable += `<tr><td>${entry.age}</td><td>${entry.sequence}</td><td> ( ${entry.sequence} % ${numSets} = Set ${entry.set})</td><td>${entry.block}</td><td>${entry.status}</td></tr>`;
+            });
+            logTable += '</table>';
+
+            const result = `
+                <p>Number of Cache Hits: ${hits}/${programFlow.length}</p>
+                <p>Number of Cache Misses: ${misses}/${programFlow.length}</p>
+                <p>Miss Penalty: ${missPenalty} ns</p>
+                <p>Average Memory Access Time: ${averageAccessTime.toFixed(2)} ns</p>
+                <p>Total Memory Access Time: ${totalAccessTime} ns</p>
+                <h3>Cache Memory Snapshot:</h3>
+                <pre>${JSON.stringify(cache, null, 2)}</pre>
+                <h3>Cache Memory Table:</h3>
+                ${table}
+                <h3>Cache Log:</h3>
+                ${logTable}
+            `;
+            document.getElementById("result").innerHTML = result;
+        }
+
+        function exportResult() {
+            const result = document.getElementById("result").innerText;
+            const blob = new Blob([result], { type: "text/plain" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "Cache-Memory-Snapshot.txt";
+            link.click();
+        }
+    </script>
+</body>
+</html>
