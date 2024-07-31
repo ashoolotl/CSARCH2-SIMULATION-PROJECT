@@ -48,30 +48,30 @@
     </style>
 </head>
 <body>
-    <h1>Cache Simulator - Block Set Associative - LRU </h1>
+    <h1>Cache Simulator - Block Sequence</h1>
     <label for="blockSize">Block Size (words):</label>
-    <input type="number" id="blockSize" value="2"><br><br>
+    <input type="number" id="blockSize" ><br><br>
 
-    <label for="setSize">Set Size (blocks):</label>
-    <input type="number" id="setSize" value="2"><br><br>
+    <label for="setSize">Set Size:</label>
+    <input type="number" id="setSize"><br><br>
 
     <label for="memorySize">Main Memory Size:</label>
-    <input type="number" id="memorySize" value="12" required>
+    <input type="number" id="memorySize" required>
     <select id="memoryUnit">
         <option value="blocks">Blocks</option>
         <option value="words">Words</option>
     </select><br><br>
 
     <label for="cacheSize">Cache Size:</label>
-    <input type="number" id="cacheSize" value="4">
+    <input type="number" id="cacheSize">
     <select id="cacheUnit">
         <option value="blocks">Blocks</option>
         <option value="words">Words</option>
     </select><br><br>
 
     <label for="programFlow">Program Flow:</label>
-    <input type="text" id="programFlow" value="1,7,5,0,2,1,5,6,5,2,2,0">
-    <select id="programUnit" style="display: none;">
+    <input type="text" id="programFlow">
+    <select id="programUnit">
         <option value="blocks">Blocks</option>
         <option value="words">Words</option>
     </select><br><br>
@@ -83,7 +83,8 @@
     <script>
         function simulateCache() {
             const blockSize = parseInt(document.getElementById("blockSize").value);
-            const setSize = parseInt(document.getElementById("setSize").value);
+            let setSize = parseInt(document.getElementById("setSize").value);
+            const setSizeConst = parseInt(document.getElementById("setSize").value);
             let cacheSize = parseInt(document.getElementById("cacheSize").value);
             const cacheUnit = document.getElementById("cacheUnit").value;
             let programFlow = document.getElementById("programFlow").value.split(',').map(Number);
@@ -91,7 +92,11 @@
 
            //Word to Block input conversion
             if (cacheUnit === "words") {
-                cacheSize = Math.ceil(cacheSize / blockSize);
+                cacheSize = cacheSize / block
+            }
+
+            if (programUnit === "words") {
+                setSize = setSize * cacheSize;
             }
 
             //MM Size Conversion
@@ -104,11 +109,6 @@
                 }
             }
             
-            //check if memory size = program flow size
-            //if (memorySize != programFlow.length) {
-             //   alert(`Memory size (${memorySize}) does not match program flow size (${programFlow.length}).`);
-            //}
-
             document.getElementById("exportButton").style.display = "block";
 
             const numSets = Math.ceil(cacheSize / setSize);
