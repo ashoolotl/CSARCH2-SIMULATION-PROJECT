@@ -189,8 +189,7 @@
                 <h3>Cache Memory Snapshot:</h3>
                 <pre>${JSON.stringify(cache, null, 2)}</pre>
                 ${programUnit !== "words" ? `<h3>Cache Memory Table:</h3>${table}` : ''}
-                <h3>Cache Log:</h3>
-                ${logTable}
+                ${programUnit !== "words" ? `<h3>Cache Log:</h3>${logTable}` : ''}
             `;
             document.getElementById("result").innerHTML = result;
         }
