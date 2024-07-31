@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cache Simulator</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Cache Simulator</h1>
+        <form id="cacheForm">
+            <label for="blockSize">Block Size (words):</label>
+            <input type="number" id="blockSize" required><br>
+            <label for="setSize">Set Size (blocks):</label>
+            <input type="number" id="setSize" required><br>
+            
+            <label for="memorySize">Main Memory Size:</label>
+            <input type="number" id="memorySize" required>
+            <div>
+                <input type="radio" id="memoryBlocks" name="memoryUnit" value="blocks" checked>
+                <label for="memoryBlocks">Blocks</label>
+                <input type="radio" id="memoryWords" name="memoryUnit" value="words">
+                <label for="memoryWords">Words</label>
+            </div><br>
+            
+            <label for="cacheSize">Cache Size:</label>
+            <input type="number" id="cacheSize" required>
+            <div>
+                <input type="radio" id="cacheBlocks" name="cacheUnit" value="blocks" checked>
+                <label for="cacheBlocks">Blocks</label>
+                <input type="radio" id="cacheWords" name="cacheUnit" value="words">
+                <label for="cacheWords">Words</label>
+            </div><br>
+            
+            <label for="programFlow">Program Flow:</label>
+            <input type="text" id="programFlow" required><br>
+            <div>
+                <input type="radio" id="programFlowBlocks" name="programFlowUnit" value="blocks" checked>
+                <label for="programFlowBlocks">Blocks</label>
+                <input type="radio" id="programFlowWords" name="programFlowUnit" value="words">
+                <label for="programFlowWords">Words</label>
+            </div><br>
+            
+            <button type="button" onclick="simulateCache()">Simulate</button>
+        </form>
+        <div id="result"></div>
+        <button id="exportButton" style="display: none;" onclick="exportResult()">Export as TXT</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
