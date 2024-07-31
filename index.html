@@ -91,7 +91,7 @@
 
            //Word to Block input conversion
             if (cacheUnit === "words") {
-                cacheSize = cacheSize.map(size => size / blockSize);
+                cacheSize = Math.ceil(cacheSize / blockSize);
             }
 
             //MM Size Conversion
