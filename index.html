@@ -53,7 +53,7 @@
     <label for="blockSize">Block Size (words):</label>
     <input type="number" id="blockSize" ><br><br>
 
-    <label for="setSize">Set Size:</label>
+    <label for="setSize">Set Size (blocks):</label>
     <input type="number" id="setSize"><br><br>
 
     <label for="memorySize">Main Memory Size:</label>
@@ -189,7 +189,6 @@
                 <h3>Cache Memory Snapshot:</h3>
                 <pre>${JSON.stringify(cache, null, 2)}</pre>
                 ${programUnit !== "words" ? `<h3>Cache Memory Table:</h3>${table}` : ''}
-                ${programUnit !== "words" ? `<h3>Cache Log:</h3>${logTable}` : ''}
             `;
             document.getElementById("result").innerHTML = result;
         }
