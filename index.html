@@ -93,7 +93,7 @@
 
            //Word to Block input conversion
             if (cacheUnit === "words") {
-                cacheSize = cacheSize / block
+                cacheSize = Math.ceil(cacheSize / blockSize);
             }
 
             if (programUnit === "words") {
