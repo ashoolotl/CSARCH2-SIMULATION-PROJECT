@@ -31,8 +31,15 @@
                 <label for="cacheWords">Words</label>
             </div><br>
             
-            <label for="programFlow">Program Flow (blocks):</label>
+            <label for="programFlow">Program Flow:</label>
             <input type="text" id="programFlow" required><br>
+            <div>
+                <input type="radio" id="programFlowBlocks" name="programFlowUnit" value="blocks" checked>
+                <label for="programFlowBlocks">Blocks</label>
+                <input type="radio" id="programFlowWords" name="programFlowUnit" value="words">
+                <label for="programFlowWords">Words</label>
+            </div><br>
+            
             <button type="button" onclick="simulateCache()">Simulate</button>
         </form>
         <div id="result"></div>

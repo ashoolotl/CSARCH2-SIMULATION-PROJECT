@@ -28,11 +28,7 @@ function simulateCache() {
     
     const memoryUnit = document.querySelector('input[name="memoryUnit"]:checked').value;
     const cacheUnit = document.querySelector('input[name="cacheUnit"]:checked').value;
-    
-    //Block to Word input conversion
-    if (memoryUnit === "blocks") {
-        memorySize = memorySize.map(size => size * blockSize);
-    }
+    const programFlowUnit = document.querySelector('input[name="programFlowUnit"]:checked').value;
 
     //Word to Block input conversion
     if (cacheUnit === "words") {
@@ -42,39 +38,65 @@ function simulateCache() {
     const cacheAccessTime = 1;
     const memoryAccessTime = 10; 
 
+    //MM Size Conversion
+    if (programFlowUnit != memoryUnit) {
+        // convert memory size type ->  program flow type
+        if (programFlowUnit === "words" && memoryUnit === "blocks") {
+            memorySize *= blockSize; //blocks -> words
+        } 
+        else if (programFlowUnit === "blocks" && memoryUnit === "words") {
+            memorySize /= blockSize;  //words -> blocks
+        }
+    }
+    
+    //check if memory size = program flow size
+    if (memorySize != programFlow.length) {
+        alert(`Memory size (${memorySize}) does not match program flow size (${programFlow.length}).`);
+
+    }
+
     const numSets = Math.ceil(cacheSize[0] / setSize);
     let cache = new Array(numSets).fill(null).map(() => new Array(setSize).fill({ block: -1, lastUsed: 0 }));
 
     let hits = 0, misses = 0, time = 0;
 
-    programFlow.forEach((block, index) => {
-        const setIndex = block % numSets;
-        let set = cache[setIndex];
-        let hit = false;
+    //MM Block Sequence
+    if (programFlowUnit === "blocks") {
+        programFlow.forEach((block, index) => {
+            const setIndex = block % numSets;
+            let set = cache[setIndex];
+            let hit = false;
 
-        for (let i = 0; i < setSize; i++) {
-            if (set[i].block === block) {
-                hits++;
-                hit = true;
-                set[i].lastUsed = index;
-                break;
-            }
-        }
-
-        if (!hit) {
-            misses++;
-            let lruIndex = 0;
-            for (let i = 1; i < setSize; i++) {
-                if (set[i].lastUsed < set[lruIndex].lastUsed) {
-                    lruIndex = i;
+            for (let i = 0; i < setSize; i++) {
+                if (set[i].block === block) {
+                    hits++;
+                    hit = true;
+                    set[i].lastUsed = index;
+                    break;
                 }
             }
-            set[lruIndex] = { block: block, lastUsed: index };
-            time += cacheAccessTime + memoryAccessTime;
-        } else {
-            time += cacheAccessTime;
-        }
-    });
+
+            if (!hit) {
+                misses++;
+                let lruIndex = 0;
+                for (let i = 1; i < setSize; i++) {
+                    if (set[i].lastUsed < set[lruIndex].lastUsed) {
+                        lruIndex = i;
+                    }
+                }
+                set[lruIndex] = { block: block, lastUsed: index };
+                time += cacheAccessTime + memoryAccessTime;
+            } else {
+                time += cacheAccessTime;
+            }
+        });
+    }
+    //TODO: MM Word Sequence
+    else {
+
+
+
+    }
 
     const missRate = misses / memorySize;
     const hitRate = hits / memorySize;
