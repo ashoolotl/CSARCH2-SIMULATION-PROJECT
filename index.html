@@ -52,7 +52,7 @@
     <label for="blockSize">Block Size (words):</label>
     <input type="number" id="blockSize" value="4"><br><br>
 
-    <label for="setSize">Set Size:</label>
+    <label for="setSize">Set Size (blocks):</label>
     <input type="number" id="setSize" value="2"><br><br>
 
     <label for="memorySize">Main Memory Size:</label>
@@ -71,10 +71,10 @@
 
     <label for="programFlow">Program Flow:</label>
     <input type="text" id="programFlow" value="1,2,3,4,5,4,6,3">
-    <select id="programUnit">
+    <!-- <select id="programUnit">
         <option value="blocks">Blocks</option>
         <option value="words">Words</option>
-    </select><br><br>
+    </select><br><br> -->
 
     <button onclick="simulateCache()">Simulate Cache</button>
     <div id="result"></div>
